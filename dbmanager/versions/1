@@ -3,7 +3,8 @@
 HOST=$1
 PASSWORD=$2
 
+echo installing 1
 cd /opt/dbmanager/data/1
-mysql -h$HOST -uroot -p$PASSWORD < employees.sql
+mysql -h$HOST -uroot -p$PASSWORD < dbmanager.sql
 
-echo "INSERT INTO versions (1);"
+echo finished 1
