@@ -1,9 +1,0 @@
-#!/bin/bash
-
-HOST=$1
-PASSWORD=$2
-
-cd /opt/dbmanager/data/0
-mysql -h$HOST -uroot -p$PASSWORD < dbmanager.sql
-
-
