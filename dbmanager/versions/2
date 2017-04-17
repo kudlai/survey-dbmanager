@@ -1,0 +1,13 @@
+#!/bin/bash
+
+HOST=$1
+PASSWORD=$2
+
+echo installing 2
+cd /opt/dbmanager/data/2
+tar xvzf repo.tar.gz
+cd repo
+mysql -h$HOST -uroot -p$PASSWORD < employees.sql
+
+echo "INSERT INTO versions values (2);" | mysql -h$HOST -uroot -p$PASSWORD dbmanager
+echo finished 2
