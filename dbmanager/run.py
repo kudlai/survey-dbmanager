@@ -4,6 +4,7 @@ import MySQLdb
 import yaml
 import os
 import subprocess
+import time
 
 def is_there_dbmanager(con):
     query = "SELECT count(*) FROM information_schema.tables WHERE TABLE_SCHEMA = 'dbmanager' AND TABLE_NAME = 'versions'"
@@ -30,7 +31,13 @@ cfg = None
 with open("/opt/dbmanager/config.yaml") as conf_file:
     cfg = yaml.load(conf_file)
 
-conn = MySQLdb.connect(passwd=cfg['mysql']['password'], user=cfg['mysql']['user'], host=cfg['mysql']['host'], port=cfg['mysql']['port'])
+conn = None
+while conn is None:
+    try:
+        db = MySQLdb.connect(passwd=cfg['mysql']['password'], user=cfg['mysql']['user'], host=cfg['mysql']['host'], port=cfg['mysql']['port'])
+        conn = db
+    except:
+        time.sleep(5)
 
 install_list = []
 if is_there_dbmanager(conn):
