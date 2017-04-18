@@ -1,10 +1,18 @@
 #!/usr/bin/env python
 
 import MySQLdb
-import yaml
+#import yaml
 import os
 import subprocess
 import time
+
+MYSQL_HOST = os.environ['MYSQL_HOST']
+MYSQL_PASSWORD = os.environ['MYSQL_PASSWORD']
+MYSQL_USER = os.environ['MYSQL_USER']
+MYSQL_PORT = int(os.environ['MYSQL_PORT'])
+
+
+print os.environ
 
 def is_there_dbmanager(con):
     query = "SELECT count(*) FROM information_schema.tables WHERE TABLE_SCHEMA = 'dbmanager' AND TABLE_NAME = 'versions'"
@@ -27,14 +35,10 @@ def get_available_versions():
     files = os.listdir("/opt/dbmanager/versions")
     return set(map(int, files))
 
-cfg = None
-with open("/opt/dbmanager/config.yaml") as conf_file:
-    cfg = yaml.load(conf_file)
-
 conn = None
 while conn is None:
     try:
-        db = MySQLdb.connect(passwd=cfg['mysql']['password'], user=cfg['mysql']['user'], host=cfg['mysql']['host'], port=cfg['mysql']['port'])
+        db = MySQLdb.connect(passwd=MYSQL_PASSWORD, user=MYSQL_USER, host=MYSQL_HOST, port=MYSQL_PORT)
         conn = db
     except:
         time.sleep(5)
@@ -51,4 +55,4 @@ else:
 
 print install_list
 for version in install_list:
-    subprocess.call(["/opt/dbmanager/versions/%s" % version, cfg['mysql']['host'], cfg['mysql']['password']])
+    subprocess.call(["/opt/dbmanager/versions/%s" % version, MYSQL_HOST, MYSQL_PASSWORD])
